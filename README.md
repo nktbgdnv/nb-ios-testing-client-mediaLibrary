@@ -1,2 +1,2 @@
 # nb-ios-testing-client-mediaLibrary
-Текст программы на языке Swift, которая реализует управление медиатекой (создание плейлистов, добавление новых треков в плейлист (+ проверка на уникальность трека), а также - удаление старых треков.
+Program code is Swift, that implements media library management (creating playlists, adding new ones (+ checking uniqueness) and deleting old tracks).рых треков.
