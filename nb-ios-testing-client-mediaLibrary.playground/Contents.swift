@@ -1,11 +1,11 @@
-/// Данный код не претендует на полноценную музыкальную библиотеку, однако
-/// он с достаточной точностью реализует ее основные функции на Swift.
-/// А это - хранение в коллекции данных треков, выгрузка "плейлистов" по определенному
-/// жанру, добавление и удаление треков из "медиатеки".
+/// This code does not pretend to be a full-fledged music library,
+/// but it quite accurately implements its main functions in Swift:
+/// storing track data in a collection, unloading "playlists" by a certain genre,
+/// adding and removing tracks from the "Media library".
 /// N. Bogdanov (c)
 
 
-// структура Track, содержащая свойства-информацию о музыкальном треке
+// Track structure containing properties-information about the music track
 struct Track {
     var name: String
     var artist: String
@@ -14,32 +14,30 @@ struct Track {
     var genre: String
 }
 
-// класс "Медиатека" (музыкальная библиотека)
+// class "Media Library" (music library)
 public class MediaLibrary {
-    // плейлисты-массивы
+    // playlists-arrays
     var listOfPlaylists: [String] = []
     
-    // метод по агрегации всех плейлистов
+    // method for aggregating all playlists
     func addPlaylist(name: String) {
         listOfPlaylists.append(name)
     }
 }
 
-// класс-абстракция "Плейлист (категория треков)"
+// abstraction-class "Playlist (track category)"
 public class FirstPlaylist {
-    // название категории
     var name: String
-    // список песен
+    // list of songs
     var songList: [Track]
-    // количество треков
     var numberOfTracks: Int {
         return songList.count
     }
     
     func add(song: Track) {
-        // проверка на добавление повторного трека
+        // check for adding a repeated track
         if checkForRepeatingTrack(testedSong: song) {
-            print("!!!   Вы пытаетесь добавить трек, который уже есть в плейлисте   !!!\n")
+            print("You are trying to add a track that is already in the playlist!\n")
         } else {
         self.songList.append(song)
         }
@@ -55,24 +53,27 @@ public class FirstPlaylist {
         }
     }
     
-    // метод, проверяющий наличие в плейлисте добавляемого вновь трека
+    init(name: String, songList: [Track]) {
+        self.name = name
+        self.songList = songList
+    }
+    
+    // method that checks for the presence of a newly added track in the playlist
     func checkForRepeatingTrack(testedSong: Track) -> Bool {
         for item in self.songList {
-            if (item.artist == testedSong.artist) && (item.country == testedSong.country) && (item.duration == testedSong.duration) && (item.genre == testedSong.genre) && (item.name == testedSong.name) {
+            if (item.artist == testedSong.artist) && 
+            (item.country == testedSong.country) && 
+            (item.duration == testedSong.duration) && 
+            (item.genre == testedSong.genre) && 
+            (item.name == testedSong.name) {
                 return true
             }
         }
         return false
     }
-    
-    // инициализатор класса
-    init(name: String, songList: [Track]) {
-        self.name = name
-        self.songList = songList
-    }
 }
 
-// создаем коллекцию треков
+// create a collection of tracks
 var medialibrary:[Track] = [Track(name: "Austronaut in the ocean", artist: "Masked Wolf", duration: 2.13, country: "USA", genre: "Rap"),
                             Track(name: "Godzilla", artist: "Eminem", duration: 3.31, country: "USA", genre: "Rap"),
                             Track(name: "Back in Black", artist: "AC/DC", duration: 4.16, country: "USA", genre: "Rock"),
@@ -80,60 +81,60 @@ var medialibrary:[Track] = [Track(name: "Austronaut in the ocean", artist: "Mask
                             Track(name: "Photograph", artist: "Nickelback", duration: 4.19, country: "USA", genre: "Rock"),
                             Track(name: "Кто убил Марка?", artist: "Oxxxymiron", duration: 9.28, country: "Russia", genre: "Rap")]
 
-// получаем из общей библиотеки только песни жанра "Рэп"
+// get only "Rap" songs from the shared library
 let rapSongs = medialibrary.filter {$0.genre == "Rap"}
 
-// создаем экземпляр класса "Первый плейлист" - музыка в стиле Рэп
-var rapMusic: FirstPlaylist = FirstPlaylist(name: "Музыка жанра Rap/Hip-hop", songList: rapSongs)
+// create an instance of the "First Playlist" class - rap music
+var rapMusic: FirstPlaylist = FirstPlaylist(name: "Music genre Rap / Hip-hop", songList: rapSongs)
 
-// добавляем новый элемент в категорию, проверяем, тестируем
+// add a new item to the category, check, test
 rapMusic.add(song: Track(name: "Monster", artist: "Eminem", duration: 4.10, country: "USA", genre: "Rap"))
 rapMusic.add(song: Track(name: "Monster", artist: "Eminem", duration: 4.10, country: "USA", genre: "Rap"))
 
-// удаляем трек из плейлиста (по названию песни)
+// remove a track from the playlist (by song name)
 rapMusic.delete(title: "Monster")
 rapMusic.delete(title: "Godzilla")
 
-print("Количество песен в плейлисте \"\(rapMusic.name)\": \(rapMusic.numberOfTracks)")
+print("Number of songs in the playlist \"\(rapMusic.name)\": \(rapMusic.numberOfTracks)")
 
-// второй плейлист
+// second playlist
 public class SecondPlaylist: FirstPlaylist {}
 
-// получаем из общей библиотеки только песни жанра "Рок"
+// get only songs of the "Rock" genre from the shared library
 let rockSongs = medialibrary.filter {$0.genre == "Rock"}
 
-// новый экземпляр класса "Второй плейлист" - музыка в стиле Рок
-var rockMusic: SecondPlaylist = SecondPlaylist(name: "Музыка жанра Рок", songList: rockSongs)
+// a new instance of the "Second playlist" class - Rock music
+var rockMusic: SecondPlaylist = SecondPlaylist(name: "Rock music", songList: rockSongs)
 
-// для проверки добавим новые песни в жанре "Рок"
+// add new songs in the "Rock" genre to check
 rockMusic.add(song: Track(name: "Unforgiven", artist: "Metallica", duration: 4.00, country: "USA", genre: "Rock"))
 rockMusic.add(song: Track(name: "Unforgiven II", artist: "Metallica", duration: 4.30, country: "USA", genre: "Rock"))
 rockMusic.add(song: Track(name: "Unforgiven III", artist: "Metallica", duration: 5.10, country: "USA", genre: "Rock"))
 
-print("Количество песен в плейлисте \"\(rockMusic.name)\": \(rockMusic.numberOfTracks)")
+print("Number of songs in the playlist \"\(rockMusic.name)\": \(rockMusic.numberOfTracks)")
 
-// создаем объект класса "Медиатека"
+// create an object of the "Media Library" class
 let homeMediaLibrary = MediaLibrary()
 homeMediaLibrary.addPlaylist(name: rapMusic.name)
 homeMediaLibrary.addPlaylist(name: rockMusic.name)
 
-// выводим на экран список наших плейлистов
-print("Мои домашние плейлисты: \(homeMediaLibrary.listOfPlaylists)")
+// display a list of our playlists
+print("My home playlists: \(homeMediaLibrary.listOfPlaylists)")
 
-/// немного расширим наши абстракции - создаем новый класс "Артист" - он будет суперклассом
+// let's expand our abstractions a little - create a new class "Artist" - it will be a superclass
 class Artist {
     var name: String = ""
     var country: String = ""
     var genre: String = ""
     
-    // общий метод "написать трек"
+    // general method "write track"
     public func writeTrack(artist: Artist, track: Track) {
-        print("Я \(artist.name) написал трек \(track.name)")
+        print("Я \(artist.name) wrote a track \(track.name)")
     }
     
-    // общий метод "исполнить трек"
+    // general method "play track"
     public func performTrack(artist: Artist, track: Track) {
-        print("Я \(artist.name) исполнил трек \(track.name)")
+        print("Я \(artist.name) performed the track \(track.name)")
     }
     
     init(artistName: String, artistCountry: String, artistGenre: String) {
@@ -143,28 +144,29 @@ class Artist {
     }
 }
 
-// создание сабкласса "Одиночный исполнитель"
+// create the "Single Executor" subclass
 final class Singer: Artist {
     
-    // переопределение свойства суперкласса "страна"
+    // override the "country" superclass property
     override var country: String {
         willSet {
-            print("Исполнитель \(self.name) переехал из страны: \(self.country) в страну: \(newValue)")
+            print("Singer \(self.name) moved out of the country: \(self.country) to country: \(newValue)")
         }
     }
-    // переопределение свойства суперкласса "жанр"
+    
+    // override the "genre" superclass property
     override var genre: String {
         willSet {
-            print("Исполнитель \(self.name) переехал из страны: \(self.country) в страну: \(newValue)")
+            print("Singer \(self.name) changes genre to \(newValue)")
         }
     }
-    // свойства "Количество альбомов" и "Количество одиночных композиций"
+    
+    // properties "Number of albums" and "Number of single compositions"
     var numberOfAlbums: Int = 0
     var numberOfSingles: Int = 0
-    // свойство "Выступает ли исполнитель с концертами"
+    // свойство "Does the performer perform with concerts"
     var performConcerts: Bool
     
-    // переопределение инициализатора
     init(artistName: String,
          artistCountry: String,
          artistGenre: String,
@@ -174,68 +176,58 @@ final class Singer: Artist {
     }
 }
 
-// создание сабкласса "Музыкальная группа"
+// create a subclass "Music group"
 final class Group: Artist {
-    // переопределение свойства "Имя"
     override var name: String {
         willSet {
-            print("Группа \(self.name) сменила название! Теперь она называется \(newValue)")
+            print("The group \(self.name) changed the name! Now it is called \(newValue)")
         }
     }
     
-    // переопределение свойства суперкласса "страна"
     override var country: String {
         willSet {
-            print("Группа \(self.name) переехала из страны: \(self.country) в страну: \(newValue)")
+            print("The group \(self.name) moved from the country: \(self.country) to country: \(newValue)")
         }
     }
     
-    // переопределение свойства суперкласса "жанр"
     override var genre: String {
         willSet {
-            print("У группы \(self.name) новый жанр \(newValue)")
+            print("The group \(self.name) changes genre to \(newValue)")
         }
     }
-    // создание уникального свойства "Количество человек в группе"
+    // create a property "Number of people in the group"
     var numberOfPeople: Int
-    // создание уникального свойства "Выступает ли группа с концертами"
+    // create a property "Does the group perform in concerts"
     var performConcerts: Bool
     
-    // уникальный для прочих классов метод "Поиск по названию группы"
-    func searchAndPrintGroupSongs() {
-        let nameOftheGroup = self.name
-        let selectedSongs = rockMusic.songList.filter {$0.artist == nameOftheGroup}
-        print("Найдено \(selectedSongs.count) песен группы \(self.name) в плейлисте")
-    }
-    
-    // переопределение инициализатора
-    init(artistName: String,
-                  artistCountry: String,
-                  artistGenre: String,
-                  numberOfPeople: Int,
-                  performConcerts: Bool) {
+    init(artistName: String, artistCountry: String, artistGenre: String, numberOfPeople: Int, performConcerts: Bool) {
         self.numberOfPeople = numberOfPeople
         self.performConcerts = performConcerts
         super.init(artistName: artistName, artistCountry: artistCountry, artistGenre: artistGenre)
     }
+    
+    // method "Search by group name"
+    func searchAndPrintGroupSongs() {
+        let nameOftheGroup = self.name
+        let selectedSongs = rockMusic.songList.filter {$0.artist == nameOftheGroup}
+        print("Find \(selectedSongs.count) songs of group \(self.name) in the playlist")
+    }
 }
 
-// создание экземпляра класса Group, проверка его значений
 var metallica: Group = Group(artistName: "Metallica", artistCountry: "USA", artistGenre: "Rock", numberOfPeople: 4, performConcerts: true)
 
-// другие группы и отдельные исполнители
 var offspring: Group = Group(artistName: "The Offspring", artistCountry: "USA", artistGenre: "Rock", numberOfPeople: 4, performConcerts: true)
 var sting: Singer = Singer(artistName: "Sting", artistCountry: "USA", artistGenre: "Pop", performConcerts: false)
 
-// проверка метода "Поиск песен выбранной группы в плейлисте"
+// check the method "Search for songs of the selected group in the playlist"
 metallica.searchAndPrintGroupSongs()
 
-// проверим, сколько артистов присутствует в медиатеке
+// check how many artists are in the library
 var arstistsArray = [Artist]()
 arstistsArray.append(metallica)
 arstistsArray.append(offspring)
 arstistsArray.append(sting)
-print("В медиатеке найдено \(arstistsArray.count) артистов. Вот они:")
+print("Find \(arstistsArray.count) artists in the media library. Here they are:")
 for item in arstistsArray {
     print(item.name)
 }
